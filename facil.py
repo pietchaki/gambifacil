@@ -9,23 +9,23 @@ from Tkinter import *
 global mat_jogos
 
 def getValues():
-	busca = re.compile('<td>../../....</td>.*?<td>.*?,..</td>',re.DOTALL) # (data_sorteio ... arrecadacao)
-	text = urlopen('file:D_LOTFAC.HTM').read()
-	busca2 = re.compile('<td>..</td>',re.DOTALL) # numero da bola
-	global mat_jogos
-	mat_jogos = []
+    busca = re.compile('<td[^\n]*?>../../....</td>.*?<td.*?>.*?,..</td>',re.DOTALL) # (data_sorteio ... arrecadacao)
+    busca2 = re.compile('[0-9]{2,2}',re.DOTALL) # numero da bola
+    #busca2 = re.compile('>..</td>',re.DOTALL) # numero da bola
+    text = urlopen('file:D_LOTFAC.HTM').read()
+    global mat_jogos
+    mat_jogos = []
 
-	for dado in busca.findall(text): 		# pega dados validos
-		line = []
-		for s in busca2.findall(dado): 	# pega numeros sorteados
-			s = s.replace("<td>","")
-			s = s.replace("</td>","")
-			try:
-				line.append( int(s) )	#colocar numero na linha
-			except:
-				print sys.exc_info()
-		mat_jogos.append( sorted( line ) ) #ordena e coloca linha na matriz
-	
+    for dado in busca.findall(text):        # pega dados validos
+        line = []
+        for s in busca2.findall(dado):  # pega numeros sorteados
+            try:
+                line.append( int(s) )   #colocar numero na linha
+            except:
+                print sys.exc_info()
+        
+        mat_jogos.append( sorted( line ) ) #ordena e coloca linha na matriz
+    
 #/getValues
 
 def imprime_resultados():
@@ -41,11 +41,14 @@ def imprime_resultados():
 #/imprime_resultados
 
 def estatis(matJogos):
+	global mat_jogos
 	vetOcorr = [0] * 25
 	vetPar   = [0] * len(matJogos)
 	vetImpar = [0] * len(matJogos)
 	vetParid = [0] * 2
-
+	print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
+	print "-------------> len(matJogos) = "+str(len(matJogos))
+	
 	
 	for count in range(0,len(matJogos)):
 		for index in range(0,15):
@@ -68,6 +71,7 @@ def estatis(matJogos):
 		temp = vetOcorrImpar[count]
 		vetOcorrImpar[count]= [temp, vetImpar.count(temp)]
 
+	print "===================> len(matJogos) = "+str(len(matJogos))
 	fResul = open ('Estatisticas','w+')
 	for index in range (0,25):	
 		fResul.write(str(index+1)+' '+"{0:.2f}".format( float(vetOcorr[index]*100)/float(len(matJogos)) )+'%\n')
@@ -92,56 +96,6 @@ def make_statistics():
 	estatis(mat_jogos)
 	print("done")
 
-# verifica se um jogo ja saiu antes
-# seq : jogo a ser testado
-# maxerr: max erros para considerar dois jogos "iguais"
-def ja_saiu(seq, maxerr):
-	n = len(seq)
-	for i in range(0, len(mat_jogos)):
-		s = j = 0
-		segundo = false
-		nerr = maxerr
-		while(s<n and j<15 and nerr>=0):
-			if(seq[s] == mat_jogos[i][j]):
-				i +=1
-				j +=1
-			elif(seq[s] < mat_jogos[i][j]):
-				s +=1
-			else: #if(seq[s] > mat_jogos[i][j]):
-				nerr -=1
-				j +=1
-		#while
-		if(j>=15-maxerr and nerr>=0):
-			return true
-	#for
-	return false
-#/ja_saiu
-
-# func recursiva!
-def gera_n(seq, i, n):
-	global jogos_validos # lista dos jogos
-	for x in range(seq[i-1],9+i):
-		seq[i] = x;
-		if(i>=n): # BASE
-			# salva nalgum canto...
-			jogos_validos.add(seq) # TODO: fazer isso funcionar
-		else:
-			gera_n(seq,i+1,n)
-# / gera_n
-
-# jogos invalidos = jogos em q pelo menos 14 dos numeros nunca sairam
-# n = quantidade de numeros na aposta (15 a 20). ???????? como fazer?
-def calcula_jogos_validos(n):
-	if(n < 15 or n > 20):
-		return 0
-	# gera todos jogos possiveis
-	gera_n(seq[n], 1, n)
-
-	# Salva em  arquivo ??
-	# calcula probabilidades...
-# / calcula_jofos_validos
-
-
 def make_grafico_soma():
         global mat_jogos
         newwindow = Toplevel()
@@ -155,6 +109,9 @@ def make_grafico_soma():
                 y = 150-(sum(x for x in mat_jogos[index])-150)
                 print y
                 graf.create_line(index+4,y,index+5,y+1)
+
+
+
 def start_gui():
 	root = Tk()
 	root.wm_title("Gambifacil")
