@@ -37,14 +37,12 @@ def getValues():
 
     global mat_jogos
     mat_jogos = []
-    i = 0
     for dado in busca.findall(text): # pega dados validos
         line = []
 
         # remove tags. Numeros sorteados ficam em uma unica linha, separados por espaco.
         dado = re.sub(r"<td[^>]*?>", "",dado)
         dado = re.sub(r"</td>\s*", " ",dado)
-        print dado
 
         line = [int(s) for s in dado.split() if s.isdigit()] # http://stackoverflow.com/questions/4289331/python-extract-numbers-from-a-string
 
@@ -56,8 +54,6 @@ def getValues():
         else:
         # /DEBUG
             mat_jogos.append( sorted( line ) ) #ordena e coloca linha na matriz
-        i+=1
-    print i
 #/getValues
 
 def imprime_resultados():

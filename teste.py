@@ -10,6 +10,36 @@ import os.path
 
 global mat_jogos # jogos que jah sairam # tamanho de um jogo eh sempre 15
 global mat_apostas # possiveis apostas  # tamanho de uma aposta eh >= 15
+global quad_count
+
+def quad_init():
+    global quad_count
+    quad_count = [[[[0 for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]
+
+def calc_quads():
+    quad_init()
+    for jogo in mat_jogos:
+        #print jogo
+        for i in range(0, 12):
+            for j in range(i+1, 13):
+                for k in range(j+1, 14):
+                    for l in range(k+1, 15):
+                        #print i,j,k,l
+                        #print jogo[i]-1,jogo[j]-2,jogo[k]-3,jogo[l]-4
+                        #x=quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4]
+                        quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4] += 1
+    for i in range(0, 12):
+        for j in range(i+1, 13):
+            for k in range(j+1, 14):
+                for l in range(k+1, 15):
+                    print str(i+1)+", "+str(j+1)+", "+str(k+1)+", "+str(l+1)+" => "+str(quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4])
+
+
+
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+
 
 #maxerr -> maximo de elementos de <jogo> que nao estao em <aposta>
 def isEqual(aposta, jogo, maxerr, tam_aposta):
@@ -56,23 +86,36 @@ def remove_invalidos(inicio, maxerr, tam_aposta):
 #/remove_invalidos
 
 def getValues():
-    busca = re.compile('<td[^\n]*?>../../....</td>.*?<td.*?>.*?,..</td>',re.DOTALL) # (data_sorteio ... arrecadacao)
-    busca2 = re.compile('[0-9]{2,2}',re.DOTALL) # numero da bola
-    #busca2 = re.compile('>..</td>',re.DOTALL) # numero da bola
-    text = urlopen('file:D_LOTFAC.HTM').read()
     global mat_jogos
     mat_jogos = []
+    #busca recebe conjunto de 15 "jogos". jogos= "<td rowspan="###">##</td>"
+    #busca = (<td rowspan".*?">[0-9]{2,2}<td>){15,15} #python nao sabe brincar de grupos entao tive que abrir a parada toda...
+    # <td[^>]*?> -> pega o <td rowspan="###">
+    # \b         -> pega qualquer caractere branco no fim de uma "palavra"
+    busca = re.compile('<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>',re.DOTALL)
+    text = urlopen('file:D_LOTFAC.HTM').read()
 
+    i = 0
     for dado in busca.findall(text):        # pega dados validos
         line = []
-        for s in busca2.findall(dado):  # pega numeros sorteados
-            try:
-                line.append( int(s) )   #colocar numero na linha
-            except:
-                print sys.exc_info()
-        
-        mat_jogos.append( sorted( line ) ) #ordena e coloca linha na matriz
-    
+
+        # remove tags. Numeros sorteados ficam em uma unica linha, separados por espaco.
+        dado = re.sub(r"<td[^>]*?>", "",dado)
+        dado = re.sub(r"</td>\s*", " ",dado)
+        #print dado
+
+        line = [int(s) for s in dado.split() if s.isdigit()] # http://stackoverflow.com/questions/4289331/python-extract-numbers-from-a-string
+
+        # DEBUG
+        if len(line) != 15: # bom garantir que nao estou fazendo cagada... hehehe
+            print "############################################################"
+            print "Jogo com "+len(line)+" numeros sorteados...."
+            print dado
+        else:
+        # /DEBUG
+            mat_jogos.append( sorted( line ) ) #ordena e coloca linha na matriz
+        i+=1
+    #print i DEBUG
 #/getValues
 
 
@@ -140,8 +183,13 @@ def calcula_apostas(n):
 # / calcula_apostas
 
 def main():
+    if len(sys.argv) >1:
+        if sys.argv[1] == "-d":
+            subprocess.call(['./baixa_extrai_resultados.sh'])
+
     getValues()
-    print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
+    calc_quads()
+    #print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
     #calcula_apostas(16)
     #print le_apostas(16)
     #print str(len(mat_apostas))
