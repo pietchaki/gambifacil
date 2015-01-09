@@ -16,6 +16,8 @@ def quad_init():
     global quad_count
     quad_count = [[[[0 for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]
 
+
+# calcula ocorrencias de quadras
 def calc_quads():
     quad_init()
     for jogo in mat_jogos:
@@ -34,13 +36,37 @@ def calc_quads():
                 for l in range(k+1, 15):
                     print str(i+1)+", "+str(j+1)+", "+str(k+1)+", "+str(l+1)+" => "+str(quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4])
 
+# verifica quantos jogos parecidos ja sairam
+def calc_parecidos():
+    c1=c2=n1=n2=0
+    i=j=0
+
+    for i in range(0,len(mat_jogos)-1):
+        for j in range(i+1,len(mat_jogos)):
+            n = howEqual(mat_jogos[i], mat_jogos[j])
+            #if n == 14:
+                #print i, mat_jogos[i]
+                #print j, mat_jogos[j]
+                #print "-----------------------------"
+            if n == n1:
+                c1 += 1
+            elif n == n2:
+                c2 += 1
+            elif n > n1:
+                n2 = n1; n1 = n
+                c2 = c1; c1 = 1
+            elif n > n2:
+                n2 = n
+                c2 = 1
+    print "teve "+str(c2)+" jogos com "+str(n2)+" numeros iguais"
+    print "teve "+str(c1)+" jogos com "+str(n1)+" numeros iguais"
 
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-
+# Verifica se aposta eh parecida com algum jogo que jah saiu
 #maxerr -> maximo de elementos de <jogo> que nao estao em <aposta>
 def isEqual(aposta, jogo, maxerr, tam_aposta):
     a=j=errA=errJ=0
@@ -61,6 +87,13 @@ def isEqual(aposta, jogo, maxerr, tam_aposta):
             j+=1
     return True
 
+# conta numeros na intersessao
+def howEqual(a, b):
+    return len(set(a) & set(b))
+
+
+
+
 def remove_invalidos(inicio, maxerr, tam_aposta):
     global mat_apostas
     #min_matches = 15-maxerr
@@ -74,9 +107,9 @@ def remove_invalidos(inicio, maxerr, tam_aposta):
         i=0
         #for aposta in mat_apostas:
         while i<x:
+            # isEqual eh melhorzinho de leves que o metodo por intersecao...
             if isEqual(mat_apostas[i], mat_jogos[j], maxerr, tam_aposta):
             #if(len(set(mat_apostas[i]) & set(mat_jogos[j])) >= min_matches):
-            # isEqual eh melhorzinho de leves que o metodo por sets...
                 del mat_apostas[i]
                 x-=1
                 break
@@ -84,6 +117,7 @@ def remove_invalidos(inicio, maxerr, tam_aposta):
                 i+=1
         j+=1
 #/remove_invalidos
+
 
 def getValues():
     global mat_jogos
@@ -159,7 +193,7 @@ def le_apostas(n):
         return 0
 
 # jogos invalidos = jogos em q pelo menos 14 dos numeros nunca sairam
-# n = quantidade de numeros na aposta (15 a 20). ???????? como fazer?
+# n = quantidade de numeros na aposta (15 a 20). 
 def calcula_apostas(n):
     if(n < 15 or n > 20):
         return 0
@@ -186,12 +220,11 @@ def main():
     if len(sys.argv) >1:
         if sys.argv[1] == "-d":
             subprocess.call(['./baixa_extrai_resultados.sh'])
-
     getValues()
-    calc_quads()
-    #print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
-    #calcula_apostas(16)
-    #print le_apostas(16)
+    #calc_quads()
+    #calc_parecidos()
+    print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
+    calcula_apostas(16)
     #print str(len(mat_apostas))
 
 if __name__ == "__main__":
