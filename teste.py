@@ -10,18 +10,12 @@ import os.path
 
 global mat_jogos # jogos que jah sairam # tamanho de um jogo eh sempre 15
 global mat_apostas # possiveis apostas  # tamanho de uma aposta eh >= 15
-global quad_count
-
-def quad_init():
-    global quad_count
-    quad_count = [[[[0 for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]
 
 
 # calcula ocorrencias de quadras
-def calc_quads():
-    quad_init()
+def calcQuads():
+    quad_count = [[[[0 for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]for x in xrange(22)]
     for jogo in mat_jogos:
-        #print jogo
         for i in range(0, 12):
             for j in range(i+1, 13):
                 for k in range(j+1, 14):
@@ -30,11 +24,42 @@ def calc_quads():
                         #print jogo[i]-1,jogo[j]-2,jogo[k]-3,jogo[l]-4
                         #x=quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4]
                         quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4] += 1
+    ll = len(mat_jogos)
+    for i in range(0, 12):
+        for j in range(0, 12):
+            for k in range(0, 12):
+                for l in range(0, 12):
+        # TODO arrumar esses float.......
+                    quad_count[i][j][k][l] = float(quad_count[i][j][k][l]) / float(ll)
+    print "arrumar os floats..... ->"+str(quad_count[1][2][3][4])+"<-"
+    return quad_count
+
+def printQuads(quad_count):
     for i in range(0, 12):
         for j in range(i+1, 13):
             for k in range(j+1, 14):
                 for l in range(k+1, 15):
                     print str(i+1)+", "+str(j+1)+", "+str(k+1)+", "+str(l+1)+" => "+str(quad_count[jogo[i]-1][jogo[j]-2][jogo[k]-3][jogo[l]-4])
+
+# estatisticas baseado nas quadras
+def statQuads():
+    print "statQuads:"
+    #stat = [0 for x in xrange(len(mat_apostas))]
+    quad_count = calcQuads()
+    with open('stat_quad.txt', 'w+') as saida:
+        for aposta in mat_apostas:
+            stat = 0
+            for i in range(0, 12):
+                for j in range(i+1, 13):
+                    for k in range(j+1, 14):
+                        for l in range(k+1, 15):
+                            #stat[a] += quad_count[aposta[i]-1][aposta[j]-2][aposta[k]-3][aposta[l]-4]
+                            stat *= quad_count[aposta[i]-1][aposta[j]-2][aposta[k]-3][aposta[l]-4]
+            for n in aposta:
+                saida.write(str(n)+",")
+            saida.write("> " + str(stat) + "\n")
+
+
 
 # verifica quantos jogos parecidos ja sairam
 def calc_parecidos():
@@ -68,7 +93,7 @@ def calc_parecidos():
 
 # Verifica se aposta eh parecida com algum jogo que jah saiu
 #maxerr -> maximo de elementos de <jogo> que nao estao em <aposta>
-def isEqual(aposta, jogo, maxerr, tam_aposta):
+def isEqualOld(aposta, jogo, maxerr, tam_aposta):
     a=j=errA=errJ=0
     maxerrA = tam_aposta-15+maxerr
     while a<tam_aposta and j<15 :
@@ -87,12 +112,31 @@ def isEqual(aposta, jogo, maxerr, tam_aposta):
             j+=1
     return True
 
+# Verifica se aposta eh parecida com algum jogo que jah saiu
+#minEq -> minimo de elementos de <jogo> que estao em <aposta>
+def isEqual(aposta, jogo, minEq, tam_aposta):
+    a=j=errA=errJ=0
+    maxerrJ = 15 - minEq
+    maxerrA = tam_aposta - minEq
+    while a<tam_aposta and j<15 :
+        if aposta[a] < jogo[j]:
+            a+=1
+            errA+=1
+            if errA > maxerrA:
+                return False
+        elif jogo[j] < aposta[a]:
+            j+=1
+            errJ+=1
+            if errJ > maxerrJ:
+                return False
+        else:
+            a+=1
+            j+=1
+    return True
+
 # conta numeros na intersessao
 def howEqual(a, b):
     return len(set(a) & set(b))
-
-
-
 
 def remove_invalidos(inicio, maxerr, tam_aposta):
     global mat_apostas
@@ -117,7 +161,6 @@ def remove_invalidos(inicio, maxerr, tam_aposta):
                 i+=1
         j+=1
 #/remove_invalidos
-
 
 def getValues():
     global mat_jogos
@@ -151,8 +194,6 @@ def getValues():
         i+=1
     #print i DEBUG
 #/getValues
-
-
 
 def gera_n(seq, i, n):
     global mat_apostas # lista dos jogos
@@ -201,11 +242,12 @@ def calcula_apostas(n):
     ap_lidas = len(mat_apostas)
     print "apostas lidas: "+str(ap_lidas)
     remove_invalidos(verificados,1,n)
-    print "apostas salvas: "+str(len(mat_apostas))
+    #print "apostas salvas: "+str(len(mat_apostas))
     # Salva em  arquivo
     if ap_lidas == len(mat_apostas):
-        print "tudo igual..."
+        #print "tudo igual..."
         return
+    print "salvando arquivo apostas_"+str(n)
     with open('apostas_'+str(n), 'w+') as saida:
         saida.write(str(len(mat_jogos))+" "+str(len(mat_apostas))) #escreve numero de apostas jah excluidas
         saida.write("\n")
@@ -213,18 +255,30 @@ def calcula_apostas(n):
             for j in jogo:
                 saida.write("{0:2d} ".format(j))
             saida.write("\n")
+    print "done."
     # calcula probabilidades...
 # / calcula_apostas
 
+def compara(sa, sb):
+    a = [int(s) for s in sa.split(',') if s.isdigit()]
+    b = [int(s) for s in sb.split(',') if s.isdigit()]
+    print "Acertaria "+str(howEqual(a,b))+" numeros."
+    sys.exit(0)
+
 def main():
+    tam_aposta = 16
     if len(sys.argv) >1:
-        if sys.argv[1] == "-d":
+        if sys.argv[1] == "-d": # Download newer data
             subprocess.call(['./baixa_extrai_resultados.sh'])
+        if sys.argv[1] == "-c": # Compara aposta com jogo
+            compara(sys.argv[2], sys.argv[3])
+        if sys.argv[1] == "-a":
+            tam_aposta = int(sys.argv[2])
+        #calc_parecidos()
     getValues()
-    #calc_quads()
-    #calc_parecidos()
     print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
-    calcula_apostas(16)
+    calcula_apostas(tam_aposta)
+    statQuads()
     #print str(len(mat_apostas))
 
 if __name__ == "__main__":
