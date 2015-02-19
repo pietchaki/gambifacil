@@ -3,7 +3,7 @@
 #Colocar neste arquivo apenas codigos para chamar as
 #coisas tudo (apresentacao, recupera dados, estatistica e probabilidade)
 #Definir aqui tbm o padrao de coding, pq senao vai ficar uma salada
-#1 - nome de funcao, variavel o  caralho a quarta
+#1 - nome de funcao, variavel e o  caralho a quarta
 #em ingles e q se foda modafoca
 #2 - definir variaveis globais aqui e agora
 #3 - padrao de tab = 4 espacos, pq eh bonito
@@ -14,11 +14,14 @@
 #=====================================================================#
 #parte de imports
 
+import getopt as go
+import sys
+
+
 import view as v
 import dates as d
 import statistics as s
 import probability as p
-import getopt as go
 
 #=====================================================================#
 #parte de variaveis globais
@@ -27,21 +30,30 @@ import getopt as go
 #parte das outras paradas
 
 def main():
-    # pega os comandos passados pela chamada do programis
-    try:
-        opts, args = go.getopt(sys.argv[1:], "h", ["help"])
-    except getopt.error, msg:
-        print msg
-        print "for help use --help"
-        sys.exit(2)
-    # process options
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            print __doc__
-            sys.exit(0)
-    # process arguments
-    for arg in args:
-        process(arg) # process() is defined elsewhere
-
+    print "#=======================================================#"
+    print "#                     GAMBIFACIL                        #"
+    print "# Solucao em facilidades facilitadoras de coisas faceis #"
+    print "#  Fodoes: Andre Coradin Gulin e Fernando P. Domingues  #"
+    print "#=======================================================#"
+    print "#                      OPCOES                           #"
+    print "# B - Baixar facilidade                                 #"
+    print "# C - Contar e gerar arquivo de facilidades             #"
+    print "# G - Gerar grafo de facilidade                         #"
+    print "# P - Calcular facilidades que ainda nao foram faceis   #"
+    print "# S - Sair da facilidade                                #"
+    print "#=======================================================#"
+    option_user = raw_input().lower();
+    while option_user != "s":
+        if option_user  == "b":
+            print "B"
+        elif option_user  == "c":
+            print "C"
+        elif option_user  == "g":
+            print "G"
+        elif option_user  == "p":
+            print "P"
+        else:
+            print "modafoca"
+        option_user = raw_input().lower();
 if __name__ == "__main__":
     main()
