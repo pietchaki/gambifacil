@@ -17,9 +17,8 @@
 import getopt as go
 import sys
 
-
 import view as v
-import dates as d
+import data as d
 import statistics as s
 import probability as p
 
@@ -30,30 +29,19 @@ import probability as p
 #parte das outras paradas
 
 def main():
-    print "#=======================================================#"
-    print "#                     GAMBIFACIL                        #"
-    print "# Solucao em facilidades facilitadoras de coisas faceis #"
-    print "#  Fodoes: Andre Coradin Gulin e Fernando P. Domingues  #"
-    print "#=======================================================#"
-    print "#                      OPCOES                           #"
-    print "# B - Baixar facilidade                                 #"
-    print "# C - Contar e gerar arquivo de facilidades             #"
-    print "# G - Gerar grafo de facilidade                         #"
-    print "# P - Calcular facilidades que ainda nao foram faceis   #"
-    print "# S - Sair da facilidade                                #"
-    print "#=======================================================#"
-    option_user = raw_input().lower();
+    v.welcome_text()
+    option_user = v.get_options_interface()
     while option_user != "s":
         if option_user  == "b":
-            print "B"
+            d.get_zipfile()
         elif option_user  == "c":
-            print "C"
+            v.feedback_messages(0)
         elif option_user  == "g":
-            print "G"
+            v.feedback_messages(0)
         elif option_user  == "p":
-            print "P"
+            v.feedback_messages(0)
         else:
-            print "modafoca"
-        option_user = raw_input().lower();
+            v.feedback_messages(0)
+        option_user = v.get_options_interface()   
 if __name__ == "__main__":
     main()
