@@ -34,6 +34,7 @@ def main():
     while option_user != "s":
         if option_user  == "b":
             d.get_zipfile()
+            d.unzip('./D_lotfac.zip','.')
         elif option_user  == "c":
             v.feedback_messages(0)
         elif option_user  == "g":

@@ -25,5 +25,9 @@ def feedback_messages(num_msg):                                                 
         print "Baixando zip de facilidades..."
     elif num_msg == 2:
         print "Terminei de baixar facilidades, olhe a pasta local."
+    elif num_msg == 3:
+        print "Extraindo facilidades..."
+    elif num_msg == 4:
+        print "Terminei de extrair facilidades."
     else:
         print "MODAFOCA"
