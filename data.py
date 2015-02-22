@@ -3,6 +3,8 @@
 #se meter algo alem disso, sera metido novamente em seu anel de carne
 
 import urllib2
+from urllib import urlopen
+import re
 import zipfile,os.path
 from cookielib import CookieJar
 import view as v
@@ -38,3 +40,33 @@ def unzip(source_filename, dest_dir):                                           
                 path = os.path.join(path, word)
             zf.extract(member, path)
     v.feedback_messages(4)    
+
+def get_numbers():
+    mat_jogos = []                                                                  
+    v.feedback_messages(5)    
+    busca = re.compile('<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>',re.DOTALL)
+    text = urlopen('file:D_LOTFAC.HTM').read()                                      #busca recebe conjunto de 15 "jogos". jogos= "<td rowspan="###">##</td>"
+                                                                                    #busca = (<td rowspan".*?">[0-9]{2,2}<td>){15,15} #python nao sabe brincar de grupos entao tive que abrir a parada toda...
+    i = 0                                                                           # <td[^>]*?> -> pega o <td rowspan="###">
+                                                                                    # \b         -> pega qualquer caractere branco no fim de uma "palavra"
+    for dado in busca.findall(text):                                                # pega dados validos
+        line = []
+        dado = re.sub(r"<td[^>]*?>", "",dado)                                       # remove tags. Numeros sorteados ficam em uma unica linha, separados por espaco.
+        dado = re.sub(r"</td>\s*", " ",dado)
+        line = [int(s) for s in dado.split() if s.isdigit()]                        # http://stackoverflow.com/questions/4289331/python-extract-numbers-from-a-string
+        if len(line) != 15:                                                         # bom garantir que nao estou fazendo cagada... hehehe
+            print "############################################################"
+            print "Jogo com "+len(line)+" numeros sorteados...."
+            print dado
+        else:
+            mat_jogos.append( sorted( line ) )                                      #ordena e coloca linha na matriz
+        i+=1
+    mat_str_for_file = str(mat_jogos)                                               #Gero arquivo de saida apenas para conferencia
+    mat_str_for_file = mat_str_for_file.replace("[","")
+    mat_str_for_file = mat_str_for_file.replace(",","")
+    mat_str_for_file = mat_str_for_file.replace("]","\n")
+    with open("Results.txt", "w") as saida:                                
+        saida.write(mat_str_for_file)
+    v.feedback_messages(6)    
+    return mat_jogos
+

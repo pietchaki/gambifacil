@@ -29,12 +29,14 @@ import probability as p
 #parte das outras paradas
 
 def main():
+    mat_results = []
     v.welcome_text()
     option_user = v.get_options_interface()
     while option_user != "s":
         if option_user  == "b":
             d.get_zipfile()
             d.unzip('./D_lotfac.zip','.')
+            mat_results = d.get_numbers()
         elif option_user  == "c":
             v.feedback_messages(0)
         elif option_user  == "g":

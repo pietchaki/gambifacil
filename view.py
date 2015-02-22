@@ -29,5 +29,9 @@ def feedback_messages(num_msg):                                                 
         print "Extraindo facilidades..."
     elif num_msg == 4:
         print "Terminei de extrair facilidades."
+    elif num_msg == 5:
+        print "Encontrando sequencias de 15 facilidades..."
+    elif num_msg == 6:
+        print "Terminei de encontrar sequencias faceis"
     else:
         print "MODAFOCA"
