@@ -29,7 +29,10 @@ import probability as p
 #parte das outras paradas
 
 def main():
+    
     mat_results = []
+    vet_occur = []
+    
     v.welcome_text()
     option_user = v.get_options_interface()
     while option_user != "s":
@@ -38,6 +41,7 @@ def main():
             d.unzip('./D_lotfac.zip','.')
             mat_results = d.get_numbers()
         elif option_user  == "c":
+            vet_occur = s.count_numbers(mat_results)
             v.feedback_messages(0)
         elif option_user  == "g":
             v.feedback_messages(0)
