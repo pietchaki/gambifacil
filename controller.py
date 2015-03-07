@@ -33,7 +33,7 @@ def main():
     mat_results = []
     vet_occur = []
 
-    v.welcome_text()
+    v.msgs("MSG_WELCOME")
     v.msgs("MSG_OPTIONS")
     v.msgs("MSG_>")
     option_user = v.get_options_interface()

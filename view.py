@@ -3,50 +3,37 @@
 #Colocar neste arquivo apenas codigos de coisas
 #que serao aprentadas na tela ou codigos de tratamento das mesmas
 
-def welcome_text():                                                             #Alterar esta parada conforme surgir mais funcoes
-    print "#=======================================================#"           #Tentar manter em ordem alfabetica, tentar...
-    print "#                     GAMBIFACIL                        #"           #E sim, eh apenas uma funcao para mostrar coisas de tela inicial...
-    print "# Solucao em facilidades facilitadoras de coisas faceis #"
+class messeges:
+    msgs = { "MSG_>":"> ",
+             "MSG_DOWN_JOGOS":"Baixando zip de facilidades...",
+             "MSG_DOWN_JOGOS_END":"Terminei de baixar facilidades, olhe a pasta local.",
+             "MSG_EXTRACT":"Extraindo facilidades...",
+             "MSG_EXTRACT_END":"Terminei de extrair facilidades.",
+             "MSG_FIND_JOGOS":"Encontrando sequencias de facilidades...",
+             "MSG_FIND_JOGOS_END":"Terminei de encontrar sequencias faceis",                        # ta tudo muito bonito, bora zoar... heheheh
+             "MSG_END":"\n\tAdeus,\n\t  E obrigado pelos peixes!\n\n",
+             "MSG_UHULL":"MODAFOCA",
+             "MSG_DEU_RUIM":"Put a Keep are You... Full Del!",
+             "MSG_":"Option only available in paid version.",
+             "MSG_OPTIONS":"""#=======================================================#
+#                      OPCOES                           #
+# B - Baixar facilidade                                 #
+# C - Contar e gerar arquivo de facilidades             #
+# G - Gerar grafo de facilidade                         #
+# P - Calcular facilidades que ainda nao foram faceis   #
+# S - Sair da facilidade                                #
+#=======================================================#""",
+             "MSG_WELCOME":"""#=======================================================#
+#                     GAMBIFACIL                        #
+# Solucao em facilidades facilitadoras de coisas faceis #""",
+             "MSG_ERRO":"ERROR: Error Message failed to pri"}
+             
+
 
 
 def get_options_interface():                                                    #Sim, soh para pegar o q o infeliz digita
     return raw_input().lower()
 
-def msgs(msg):                                                 #Deixar todas as msgs do programa aqui, mas facil de rastrear e alterar, acho...
-    if   msg == "MSG_>":
-        print "> ",
-    elif msg == "MSG_DOWN_JOGOS":
-        print "Baixando zip de facilidades..."
-    elif msg == "MSG_DOWN_JOGOS_END":
-        print "Terminei de baixar facilidades, olhe a pasta local."
-    elif msg == "MSG_EXTRACT":
-        print "Extraindo facilidades..."
-    elif msg == "MSG_EXTRACT_END":
-        print "Terminei de extrair facilidades."
-    elif msg == "MSG_FIND_JOGOS":
-        print "Encontrando sequencias de facilidades..."
-    elif msg == "MSG_FIND_JOGOS_END":
-        print "Terminei de encontrar sequencias faceis"
-
-# ta tudo muito bonito, bora zoar... heheheh
-    elif msg == "MSG_END":
-        print "\n\tAdeus,\n\t  E obrigado pelos peixes!\n\n"
-
-    elif msg == "MSG_UHULL":
-        print "MODAFOCA"
-    elif msg == "MSG_DEU_RUIM":
-        print "Put a Keep are You... Full Del!"
-    elif msg == "MSG_":
-        print "Option only available in paid version."
-
-    elif msg == "MSG_OPTIONS":
-        print "#=======================================================#"
-        print "#                      OPCOES                           #"
-        print "# B - Baixar facilidade                                 #"
-        print "# C - Contar e gerar arquivo de facilidades             #"
-        print "# G - Gerar grafo de facilidade                         #"
-        print "# P - Calcular facilidades que ainda nao foram faceis   #"
-        print "# S - Sair da facilidade                                #"
-        print "#=======================================================#"
-    else:
-        print "ERROR: Error Message failed to pri",
+def msgs(msg):                                                                  #Deixar todas as msgs do programa aqui, mas facil de rastrear e alterar, acho...
+    texts = messeges()
+    print texts.msgs[msg]
