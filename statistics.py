@@ -10,3 +10,16 @@ def count_numbers(mat):                          #funcao que conta a ocorrencia 
          for number in game:                     #uso o numero do sorteio como indice do vetor de contagem
             vet[number] +=1
     return vet
+
+def count_pairs(mat):
+    mat_res = [[]]*25
+    vet_temp = [0]*26
+    for number1 in range(1,25):
+        for number2 in range(number1+1,26):
+            for game in mat:
+                if (number1 in game) and (number2 in game):
+                    vet_temp[number2]+=1
+        mat_res[number1] = vet_temp[:]
+        vet_temp = [0]*26
+    return mat_res
+        

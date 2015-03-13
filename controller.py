@@ -32,23 +32,27 @@ def main():
 
     mat_results = []
     vet_occur = []
+    mat_occur_pairs = []
 
     v.msgs("MSG_WELCOME")
     v.msgs("MSG_OPTIONS")
     v.msgs("MSG_>")
+
+    mat_jogos = d.get_numbers()
+    
     option_user = v.get_options_interface()
-    if option_user != "b":
-        mat_jogos = d.get_numbers()
+    
     while option_user != "s":
-        if option_user  == "b":
+        if option_user  == "a":
             d.get_zipfile()
             d.unzip('./D_lotfac.zip','.')
+        if option_user  == "b":
             mat_jogos = d.get_numbers()
         elif option_user  == "c":
             vet_occur = s.count_numbers(mat_jogos)
             v.msgs("MSG_UHULL")
         elif option_user  == "g":
-            v.msgs("MSG_")
+            mat_occur_pairs = s.count_pairs(mat_jogos)
         elif option_user  == "p":
             v.msgs("MSG_")
         elif option_user  == "h":

@@ -10,7 +10,7 @@ from cookielib import CookieJar
 import view as v
 
 def get_zipfile():
-    v.msgs("MSG_DOWN_JOGOS")                                                          #Ao inves de baixar pelo shellscript
+    v.msgs("MSG_DOWN_JOGOS")                                                        #Ao inves de baixar pelo shellscript
                                                                                     #optei por fazer o python baixar a parada
     url = 'http://www1.caixa.gov.br/loterias/_arquivos/loterias/D_lotfac.zip'       #mais a frente tera uma funcao q extrai as paradas
     cj = CookieJar()                                                                #aqui o esquema eh q ele da uma bolacha(cookie) para um macaquinho
@@ -48,25 +48,27 @@ def get_numbers():
     busca = re.compile('<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>',re.DOTALL)
                                                                                     #busca recebe conjunto de 15 "jogos". jogos= "<td rowspan="###">##</td>"
                                                                                     # <td[^>]*?> -> pega o <td rowspan="###">
-                                                                                    # \b         -> pega qualquer caractere branco no fim de uma "palavra"
-    text = urlopen('file:D_LOTFAC.HTM').read()
-    for dado in busca.findall(text):                                                # pega dados validos
-        line = []
-        dado = re.sub(r"<td[^>]*?>", "",dado)                                       # remove tags. Numeros sorteados ficam em uma unica linha, separados por espaco.
-        dado = re.sub(r"</td>\s*", " ",dado)
-        line = [int(s) for s in dado.split() if s.isdigit()]                        # http://stackoverflow.com/questions/4289331/python-extract-numbers-from-a-string
-        if len(line) != 15:                                                         # bom garantir que nao estou fazendo cagada... hehehe
-            print "############################################################"
-            print "Jogo com "+len(line)+" numeros sorteados...."
-            print dado
-        else:
-            mat_jogos.append( sorted( line ) )                                      #ordena e coloca linha na matriz
-    mat_str_for_file = str(mat_jogos)                                               #Gero arquivo de saida apenas para conferencia
-    mat_str_for_file = mat_str_for_file.replace("[","")
-    mat_str_for_file = mat_str_for_file.replace(",","")
-    mat_str_for_file = mat_str_for_file.replace("]","\n")
-    with open("Results.txt", "w") as saida:
-        saida.write(mat_str_for_file)
-    v.msgs("MSG_FIND_JOGOS_END")
-    return mat_jogos
+    try:                                                                                # \b         -> pega qualquer caractere branco no fim de uma "palavra"
+        text = urlopen('file:D_LOTFAC.HTM').read()
+        for dado in busca.findall(text):                                                # pega dados validos
+            line = []
+            dado = re.sub(r"<td[^>]*?>", "",dado)                                       # remove tags. Numeros sorteados ficam em uma unica linha, separados por espaco.
+            dado = re.sub(r"</td>\s*", " ",dado)
+            line = [int(s) for s in dado.split() if s.isdigit()]                        # http://stackoverflow.com/questions/4289331/python-extract-numbers-from-a-string
+            if len(line) != 15:                                                         # bom garantir que nao estou fazendo cagada... hehehe
+                print "############################################################"
+                print "Jogo com "+len(line)+" numeros sorteados...."
+                print dado
+            else:
+                mat_jogos.append( sorted( line ) )                                      #ordena e coloca linha na matriz
+        mat_str_for_file = str(mat_jogos)                                               #Gero arquivo de saida apenas para conferencia
+        mat_str_for_file = mat_str_for_file.replace("[","")
+        mat_str_for_file = mat_str_for_file.replace(",","")
+        mat_str_for_file = mat_str_for_file.replace("]","\n")
+        with open("Results.txt", "w") as saida:
+            saida.write(mat_str_for_file)
+        v.msgs("MSG_FIND_JOGOS_END")
+        return mat_jogos
+    except IOError, e:
+        v.msgs('MSG_DEU_RUIM')
 

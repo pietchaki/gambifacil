@@ -14,10 +14,11 @@ class messeges:
              "MSG_END":"\n\tAdeus,\n\t  E obrigado pelos peixes!\n\n",
              "MSG_UHULL":"MODAFOCA",
              "MSG_DEU_RUIM":"Put a Keep are You... Full Del!",
-             "MSG_":"Option only available in paid version.",
+             "MSG_":"Option only available in paid version.",                                       # a opcao b a seguir eh executada por padrao no comeco, esta ali apenas para recovery se der merda
              "MSG_OPTIONS":"""#=======================================================#
 #                      OPCOES                           #
-# B - Baixar facilidade                                 #
+# A - Atualizar facilidade                              #
+# B - Ler facilidades                                   #                           
 # C - Contar e gerar arquivo de facilidades             #
 # G - Gerar grafo de facilidade                         #
 # P - Calcular facilidades que ainda nao foram faceis   #
