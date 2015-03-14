@@ -8,6 +8,8 @@ class messeges:
              "MSG_DOWN_JOGOS":"Baixando zip de facilidades...",
              "MSG_DOWN_JOGOS_END":"Terminei de baixar facilidades, olhe a pasta local.",
              "MSG_EXTRACT":"Extraindo facilidades...",
+             "MSG_GET_LUCKY":"Escolhendo facilidades...Aguarde",
+             "MSG_GET_LUCKY_END":"Escolhi facilidades.",
              "MSG_EXTRACT_END":"Terminei de extrair facilidades.",
              "MSG_FIND_JOGOS":"Encontrando sequencias de facilidades...",
              "MSG_FIND_JOGOS_END":"Terminei de encontrar sequencias faceis",                        # ta tudo muito bonito, bora zoar... heheheh
@@ -18,9 +20,10 @@ class messeges:
              "MSG_OPTIONS":"""#=======================================================#
 #                      OPCOES                           #
 # A - Atualizar facilidade                              #
-# B - Ler facilidades                                   #                           
+# B - Ler facilidades                                   #                       
 # C - Contar e gerar arquivo de facilidades             #
 # G - Gerar grafo de facilidade                         #
+# L - Gerar facilidade sortuda                          #
 # P - Calcular facilidades que ainda nao foram faceis   #
 # S - Sair da facilidade                                #
 #=======================================================#""",

@@ -3,6 +3,7 @@
 #se meter algo alem disso, sera metido novamente em seu anel de carne
 
 import urllib2
+import randomdotorg as rdo
 from urllib import urlopen
 import re
 import zipfile,os.path
@@ -72,3 +73,14 @@ def get_numbers():
     except IOError, e:
         v.msgs('MSG_DEU_RUIM')
 
+def get_lucky():                                                                        #funcao para gerar um jogo de 15 numeros 
+    r = rdo.RandomDotOrg('Controller')                                                  #baseado no random.org
+    numbers = list(range(1,26))
+    selected = [0]*16
+    v.msgs('MSG_GET_LUCKY')
+    for count in range(1,16):                                                           #escolho um numero e retiro ele das opcoes, ate encolher 15
+        selected[count]= r.choice(numbers)                                              #choice eh uma das funcoes do randomdotorg
+        numbers.remove(selected[count])
+    selected.remove(0)
+    v.msgs('MSG_GET_LUCKY_END')
+    return sorted(selected)

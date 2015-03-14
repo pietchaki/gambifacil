@@ -53,6 +53,8 @@ def main():
             v.msgs("MSG_UHULL")
         elif option_user  == "g":
             mat_occur_pairs = s.count_pairs(mat_jogos)
+        elif option_user  == "l":
+            print d.get_lucky()
         elif option_user  == "p":
             v.msgs("MSG_")
         elif option_user  == "h":
