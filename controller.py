@@ -33,6 +33,7 @@ def main():
     mat_results = []
     vet_occur = []
     mat_occur_pairs = []
+    graph = []
 
     v.msgs("MSG_WELCOME")
     v.msgs("MSG_OPTIONS")
@@ -53,6 +54,7 @@ def main():
             v.msgs("MSG_UHULL")
         elif option_user  == "g":
             mat_occur_pairs = s.count_pairs(mat_jogos)
+            graph = s.init_graph()
         elif option_user  == "l":
             print d.get_lucky()
         elif option_user  == "p":

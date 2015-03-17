@@ -22,4 +22,10 @@ def count_pairs(mat):
         mat_res[number1] = vet_temp[:]
         vet_temp = [0]*26
     return mat_res
-        
+
+def init_graph():
+     return [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]*25  #ao inves de usar uma biblioteca vou fazer na mao
+                                                                        # o grafo sera uma lista de listas
+                                                                        #cada lista indica um nodo, por consequencia um numero sorteado
+                                                                        #cada numero dessa lista, indica a interacao daquele numero sorteado com o numero sorteado do index
+                                                                        #ex: na segunda lista no terceiro valor esta indicado quantas vezes o numero dois saiu com o numero tres
