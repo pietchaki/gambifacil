@@ -12,7 +12,7 @@ def count_numbers(mat):                          #funcao que conta a ocorrencia 
     return vet
 
 def count_pairs(mat):
-    mat_res = [[]]*25
+    mat_res = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]*26
     vet_temp = [0]*26
     for number1 in range(1,25):
         for number2 in range(number1+1,26):
@@ -29,3 +29,14 @@ def init_graph():
                                                                         #cada lista indica um nodo, por consequencia um numero sorteado
                                                                         #cada numero dessa lista, indica a interacao daquele numero sorteado com o numero sorteado do index
                                                                         #ex: na segunda lista no terceiro valor esta indicado quantas vezes o numero dois saiu com o numero tres
+def load_graph(mat):
+    index = 1
+    index2 = 1
+    while (index < 26):
+        while (index2 < 26):
+            mat[index2][index] = mat[index][index2]
+            index2+=1
+        index+=1
+        index2=index
+    return mat
+        
