@@ -54,6 +54,8 @@ def main():
         elif option_user  == "g":
             mat_occur_pairs = s.count_pairs(mat_jogos)
             mat_occur_pairs = s.load_graph(mat_occur_pairs)
+        elif option_user  == "f":
+             s.find_path(mat_occur_pairs, 1, 15)
         elif option_user  == "l":
             print d.get_lucky()
         elif option_user  == "p":

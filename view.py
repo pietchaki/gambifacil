@@ -10,6 +10,8 @@ class messeges:
              "MSG_EXTRACT":"Extraindo facilidades...",
              "MSG_GET_LUCKY":"Escolhendo facilidades...Aguarde",
              "MSG_GET_LUCKY_END":"Escolhi facilidades.",
+             "MSG_GRAFANDO":"Grafando...Aguarde",
+             "MSG_GRAFANDO_END":"Grafei.",
              "MSG_EXTRACT_END":"Terminei de extrair facilidades.",
              "MSG_FIND_JOGOS":"Encontrando sequencias de facilidades...",
              "MSG_FIND_JOGOS_END":"Terminei de encontrar sequencias faceis",                        # ta tudo muito bonito, bora zoar... heheheh
@@ -24,6 +26,7 @@ class messeges:
 # C - Contar e gerar arquivo de facilidades             #
 # G - Gerar grafo de facilidade                         #
 # L - Gerar facilidade sortuda                          #
+# F - Gerar facilidade grafada                          #
 # P - Calcular facilidades que ainda nao foram faceis   #
 # S - Sair da facilidade                                #
 #=======================================================#""",

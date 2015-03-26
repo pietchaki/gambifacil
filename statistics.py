@@ -3,6 +3,7 @@
 #se ocorrer algum outro tipo de magia nesse arquivo, seremos amaldicoados a
 #nunca ganhar porras, entao separe esta caceta
 
+import view as v
 
 def count_numbers(mat):                          #funcao que conta a ocorrencia de cada numero e retorna um vetor com esses valores
     vet = [0]*26                                 #o espaco alocado para o indice zero eh perdido, mas escolhi isso a ter q 
@@ -32,11 +33,30 @@ def init_graph():
 def load_graph(mat):
     index = 1
     index2 = 1
+    v.msgs("MSG_GRAFANDO")
     while (index < 26):
         while (index2 < 26):
             mat[index2][index] = mat[index][index2]
             index2+=1
         index+=1
         index2=index
+    v.msgs("MSG_GRAFANDO_END")        
     return mat
+
+def find_path(mat, node_start, len_path):
+    path = []
+    gtfo = 1
+    while len(path) < len_path:
+        neighborhood = mat[node_start]
+        while gtfo:
+             next_node =  neighborhood.index(max(neighborhood))
+             if next_node not in path:
+                 path.append(next_node)
+                 gtfo = 0
+             else:
+                 neighborhood.pop(next_node)
+        gtfo = 1
+        node_start = next_node
+    print sorted(path)
+             
         
