@@ -50,12 +50,13 @@ def main():
             mat_jogos = d.get_numbers()
         elif option_user  == "c":
             vet_occur = s.count_numbers(mat_jogos)
+            print vet_occur
             v.msgs("MSG_UHULL")
         elif option_user  == "g":
             mat_occur_pairs = s.count_pairs(mat_jogos)
             mat_occur_pairs = s.load_graph(mat_occur_pairs)
         elif option_user  == "f":
-             s.find_path(mat_occur_pairs, 1, 15)
+             print s.find_path(mat_occur_pairs, 1, 15, vet_occur)
         elif option_user  == "l":
             print d.get_lucky()
         elif option_user  == "p":

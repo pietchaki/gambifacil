@@ -84,3 +84,7 @@ def get_lucky():                                                                
     selected.remove(0)
     v.msgs('MSG_GET_LUCKY_END')
     return sorted(selected)
+
+def get_random():
+    r = rdo.RandomDotOrg('Controller')                                                  #baseado no random.org
+    return r.random(amount=1)

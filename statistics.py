@@ -4,6 +4,7 @@
 #nunca ganhar porras, entao separe esta caceta
 
 import view as v
+import data as d
 
 def count_numbers(mat):                          #funcao que conta a ocorrencia de cada numero e retorna um vetor com esses valores
     vet = [0]*26                                 #o espaco alocado para o indice zero eh perdido, mas escolhi isso a ter q 
@@ -43,13 +44,14 @@ def load_graph(mat):
     v.msgs("MSG_GRAFANDO_END")        
     return mat
 
-def find_path(mat, node_start, len_path):
+def find_path(mat, node_start, len_path, vet_occur):
     path = []
     gtfo = 1
     while len(path) < len_path:
         neighborhood = mat[node_start]
         while gtfo:
-             next_node =  neighborhood.index(max(neighborhood))
+             #next_node =  neighborhood.index(max(neighborhood))
+             next_node = heuristic_1(vet_occur,neighborhood)
              if next_node not in path:
                  path.append(next_node)
                  gtfo = 0
@@ -57,6 +59,18 @@ def find_path(mat, node_start, len_path):
                  neighborhood.pop(next_node)
         gtfo = 1
         node_start = next_node
-    print sorted(path)
-             
+    return sorted(path)
+
+def heuristic_1(vet_occur, neighborhood_node):
+    temp = [0.0]*26
+    index = 1
+    golden_ratio = (1 + 5 ** 0.5) / 4                           #dividi a proporcao aurea por 2 
+    print temp
+    print neighborhood_node
+    for neighbor in neighborhood_node:
+        print vet_occur[index]
+        temp[index] = float(neighbor) * float(vet_occur[index])# * d.get_random() * golden_ratio
+        index +=1
+    print temp
+    return neighborhood_node.index(max(neighborhood_node))
         
