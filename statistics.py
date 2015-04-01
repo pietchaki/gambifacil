@@ -47,6 +47,7 @@ def load_graph(mat):
 def find_path(mat, node_start, len_path, vet_occur):
     path = []
     gtfo = 1
+    v.msgs("MSG_CAMINHANDO")
     while len(path) < len_path:
         neighborhood = mat[node_start]
         while gtfo:
@@ -59,18 +60,16 @@ def find_path(mat, node_start, len_path, vet_occur):
                  neighborhood.pop(next_node)
         gtfo = 1
         node_start = next_node
+        print 'Tamanho do caminho: '+str(len(path))
+    v.msgs("MSG_CAMINHANDO_END")
     return sorted(path)
 
 def heuristic_1(vet_occur, neighborhood_node):
     temp = [0.0]*26
-    index = 1
+    index = 0
     golden_ratio = (1 + 5 ** 0.5) / 4                           #dividi a proporcao aurea por 2 
-    print temp
-    print neighborhood_node
     for neighbor in neighborhood_node:
-        print vet_occur[index]
-        temp[index] = float(neighbor) * float(vet_occur[index])# * d.get_random() * golden_ratio
+        temp[index] = float(neighbor) * float(vet_occur[index]) * float(d.get_random()) * golden_ratio
         index +=1
-    print temp
     return neighborhood_node.index(max(neighborhood_node))
         

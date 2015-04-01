@@ -12,6 +12,8 @@ class messeges:
              "MSG_GET_LUCKY_END":"Escolhi facilidades.",
              "MSG_GRAFANDO":"Grafando...Aguarde",
              "MSG_GRAFANDO_END":"Grafei.",
+             "MSG_CAMINHANDO":"Caminhando...Aguarde",
+             "MSG_CAMINHANDO_END":"Caminhei.",
              "MSG_EXTRACT_END":"Terminei de extrair facilidades.",
              "MSG_FIND_JOGOS":"Encontrando sequencias de facilidades...",
              "MSG_FIND_JOGOS_END":"Terminei de encontrar sequencias faceis",                        # ta tudo muito bonito, bora zoar... heheheh

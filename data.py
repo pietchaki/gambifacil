@@ -87,4 +87,4 @@ def get_lucky():                                                                
 
 def get_random():
     r = rdo.RandomDotOrg('Controller')                                                  #baseado no random.org
-    return r.random(amount=1)
+    return r.random(amount=1)[0]
