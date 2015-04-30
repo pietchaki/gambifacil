@@ -11,6 +11,70 @@ import os.path
 global mat_jogos # jogos que jah sairam # tamanho de um jogo eh sempre 15
 global mat_apostas # possiveis apostas  # tamanho de uma aposta eh >= 15
 
+# Calcula quantas vezes cada numero sai em jogos consecutivos.
+def calcSeq(mat_jogos):
+    MAX = 15                                               # Defini como 10 o maximo de jogos consecutivos que um numero eh sorteado....
+    seq = [[0 for x in xrange(MAX+1)]for x in xrange(26)]  # Inicializa vetor de sequencias
+
+    print "# numero de jogos consecutivos em que um numero saiu:"
+    for i in range(1,26):
+        s=0
+        for jogo in mat_jogos:
+            if i in jogo:
+                s+=1
+            else:
+                if s>=MAX:
+                    seq[i][MAX] += 1
+                else:
+                    seq[i][s] += 1
+                s=0
+    printSeq(seq)
+
+    # Reseta tudo
+    print "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - -\n"
+    for i in xrange(26):
+        for s in xrange(MAX+1):
+            seq[i][s] = 0
+
+    print "# numero de jogos consecutivos em que um numero *NAO* saiu"
+    for i in range(1,26):
+        s=0
+        for jogo in mat_jogos:
+            if i in jogo:
+                if s>=MAX:
+                    seq[i][MAX] += 1
+                else:
+                    seq[i][s] += 1
+                s=0
+            else:
+                s+=1
+    printSeq(seq)
+
+# imprime dados de sequencias
+def printSeq(seq):
+    MAX = 15
+    print "  #\\rep",
+    for i in range(1,MAX+1): # for the Beleza
+        print "{0:3d} ".format(i),
+    print ""
+    for i in range(1,26):
+        print " {0:2d} ->".format(i),
+        for j in range(1,MAX+1):
+            seq[0][j] += seq[i][j]
+            if seq[i][j] == 0:
+                print "   .",
+            else:
+                print " {0:3d}".format(seq[i][j]),
+        print ""
+    print "\nMEDIA:",
+    for j in range(1,MAX+1):
+        print " {0:3d}".format(seq[0][j]/25),
+    print ""
+#\calcSeq
+
+
+
+
 
 # calcula ocorrencias de quadras
 def calcQuads():
@@ -266,6 +330,7 @@ def compara(sa, sb):
     sys.exit(0)
 
 def main():
+    global mat_jogos
     tam_aposta = 16
     if len(sys.argv) >1:
         if sys.argv[1] == "-d": # Download newer data
@@ -277,8 +342,11 @@ def main():
         #calc_parecidos()
     getValues()
     print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
-    calcula_apostas(tam_aposta)
-    statQuads()
+    calcSeq(mat_jogos)
+
+
+    #calcula_apostas(tam_aposta)
+    #statQuads()
     #print str(len(mat_apostas))
 
 if __name__ == "__main__":
