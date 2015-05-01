@@ -17,17 +17,18 @@ class messeges:
              "MSG_EXTRACT_END":"Terminei de extrair facilidades.",
              "MSG_FIND_JOGOS":"Encontrando sequencias de facilidades...",
              "MSG_FIND_JOGOS_END":"Terminei de encontrar sequencias faceis",                        # ta tudo muito bonito, bora zoar... heheheh
-             "MSG_END":"\n\tAdeus,\n\t  E obrigado pelos peixes!\n\n",
+             "MSG_END":"\n\tAdeus,\n\t   E obrigado pelos peixes!\n\n",
              "MSG_UHULL":"MODAFOCA",
              "MSG_DEU_RUIM":"Put a Keep are You... Full Del!",
              "MSG_":"Option only available in paid version.",                                       # a opcao b a seguir eh executada por padrao no comeco, esta ali apenas para recovery se der merda
              "MSG_OPTIONS":"""#=======================================================#
 #                      OPCOES                           #
 # A - Atualizar facilidade                              #
-# B - Ler facilidades                                   #                       
+# B - Ler facilidades                                   #
 # C - Contar e gerar arquivo de facilidades             #
 # G - Gerar grafo de facilidade                         #
 # L - Gerar facilidade sortuda                          #
+# K - Adiciona dados temporais ao grafo (exec. G antes) #
 # F - Gerar facilidade grafada                          #
 # P - Calcular facilidades que ainda nao foram faceis   #
 # S - Sair da facilidade                                #

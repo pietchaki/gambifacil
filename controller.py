@@ -36,12 +36,13 @@ def main():
 
     v.msgs("MSG_WELCOME")
     v.msgs("MSG_OPTIONS")
-    v.msgs("MSG_>")
 
     mat_jogos = d.get_numbers()
-    
+
+    v.msgs("MSG_>")
+
     option_user = v.get_options_interface()
-    
+
     while option_user != "s":
         if option_user  == "a":
             d.get_zipfile()
@@ -59,6 +60,8 @@ def main():
              print s.find_path(mat_occur_pairs, 1, 15, vet_occur)
         elif option_user  == "l":
             print d.get_lucky()
+        elif option_user  == "k":
+            print s.calcSeqLast(mat_jogos, mat_occur_pairs)
         elif option_user  == "p":
             v.msgs("MSG_")
         elif option_user  == "h":

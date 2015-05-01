@@ -11,6 +11,50 @@ import os.path
 global mat_jogos # jogos que jah sairam # tamanho de um jogo eh sempre 15
 global mat_apostas # possiveis apostas  # tamanho de uma aposta eh >= 15
 
+#calc a qntos jogos que cada numero sai ou nao
+def calcSeqLast(mat_jogos):
+    MAX = 15                                               # Defini como 15 o maximo de jogos consecutivos que um numero eh sorteado....
+    seq = [[0 for x in xrange(MAX+1)]for x in xrange(26)]  # Inicializa vetor de sequencias
+    cont = [0]*26
+    j = len(mat_jogos)-1
+    for i in range(1,26):
+        k=1
+        if i in mat_jogos[j]:
+            while i in mat_jogos[j-k]:
+                k+=1
+        else:
+            while i not in mat_jogos[j-k]:
+                k+=1
+
+        # Aplica as parada loca nas loucuras pseudo-faceis
+        if cont[i]>0:
+            s=0
+            for jogo in mat_jogos:
+                if i in jogo:
+                    s+=1
+                else:
+                    if s>=MAX:
+                        seq[i][MAX] += 1
+                    else:
+                        seq[i][s] += 1
+                    s=0
+        else:
+            s=0
+            for jogo in mat_jogos:
+                if i in jogo:
+                    if s>=MAX:
+                        seq[i][MAX] += 1
+                    else:
+                        seq[i][s] += 1
+                    s=0
+                else:
+                    s+=1
+        print str(cont[i])+" == ",
+        cont[i] = seq[i][abs(cont[i])]
+        print cont[i]
+#fim dessa loucura
+#\calcSeqLast
+
 # Calcula quantas vezes cada numero sai em jogos consecutivos.
 def calcSeq(mat_jogos):
     MAX = 15                                               # Defini como 10 o maximo de jogos consecutivos que um numero eh sorteado....
@@ -342,8 +386,8 @@ def main():
         #calc_parecidos()
     getValues()
     print "-------------> len(mat_jogos) = "+str(len(mat_jogos))
-    calcSeq(mat_jogos)
-
+    #calcSeq(mat_jogos)
+    calcSeqLast(mat_jogos)
 
     #calcula_apostas(tam_aposta)
     #statQuads()

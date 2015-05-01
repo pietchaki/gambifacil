@@ -68,10 +68,41 @@ def get_numbers():
         mat_str_for_file = mat_str_for_file.replace("]","\n")
         with open("Results.txt", "w") as saida:
             saida.write(mat_str_for_file)
-        v.msgs("MSG_FIND_JOGOS_END")
+        #v.msgs("MSG_FIND_JOGOS_END")
+        print "Foram lidos "+str(len(mat_jogos))+" jogos"
         return mat_jogos
     except IOError, e:
         v.msgs('MSG_DEU_RUIM')
+
+def getValues():
+    mat_jogos = []
+    #busca recebe conjunto de 15 "jogos". jogos= "<td rowspan="###">##</td>"
+    #busca = (<td rowspan".*?">[0-9]{2,2}<td>){15,15} #python nao sabe brincar de grupos entao tive que abrir a parada toda...
+    # <td[^>]*?> -> pega o <td rowspan="###">
+    # \b         -> pega qualquer caractere branco no fim de uma "palavra"
+    busca = re.compile('<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>\s*<td[^>]*?>[0-9]{2,2}</td>',re.DOTALL)
+    text = urlopen('file:D_LOTFAC.HTM').read()
+
+    i = 0
+    for dado in busca.findall(text):        # pega dados validos
+        line = []
+
+        # remove tags. Numeros sorteados ficam em uma unica linha, separados por espaco.
+        dado = re.sub(r"<td[^>]*?>", "",dado)
+        dado = re.sub(r"</td>\s*", " ",dado)
+        #print dado
+
+        line = [int(s) for s in dado.split() if s.isdigit()] # http://stackoverflow.com/questions/4289331/python-extract-numbers-from-a-string
+
+        # DEBUG
+        if len(line) != 15: # bom garantir que nao estou fazendo cagada... hehehe
+            print "############################################################"
+            print "Jogo com "+len(line)+" numeros sorteados...."
+            print dado
+        else:
+        # /DEBUG
+            mat_jogos.append( sorted( line ) ) #ordena e coloca linha na matriz
+        i+=1
 
 def get_lucky():                                                                        #funcao para gerar um jogo de 15 numeros 
     r = rdo.RandomDotOrg('Controller')                                                  #baseado no random.org
