@@ -6,6 +6,10 @@
 import view as v
 import data as d
 
+golden_ratio = (1 + 5 ** 0.5) / 4                           #dividi a proporcao aurea por 2 
+meuRandom = 1
+
+
 def count_numbers(mat):                          #funcao que conta a ocorrencia de cada numero e retorna um vetor com esses valores
     vet = [0]*26                                 #o espaco alocado para o indice zero eh perdido, mas escolhi isso a ter q 
     for game in mat:                             #q ficar fazendo somas em todos os for's
@@ -16,7 +20,7 @@ def count_numbers(mat):                          #funcao que conta a ocorrencia 
 def count_pairs(mat):
     mat_res = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]*26
     vet_temp = [0]*26
-    for number1 in range(1,25):
+    for number1 in range(1,26):
         for number2 in range(number1+1,26):
             for game in mat:
                 if (number1 in game) and (number2 in game):
@@ -41,7 +45,7 @@ def load_graph(mat):
             index2+=1
         index+=1
         index2=index
-    v.msgs("MSG_GRAFANDO_END")        
+    v.msgs("MSG_GRAFANDO_END")
     for x in mat:
         for y in x:
             print " {0:3d}".format(y),
@@ -52,6 +56,11 @@ def load_graph(mat):
 def find_path(mat, node_start, len_path, vet_occur):
     path = []
     gtfo = 1
+
+    global meuRandom
+    global golden_ratio
+    meuRandom = float(d.get_random()) * golden_ratio # calcula prop. aurea * random  uma soh vez para reduzir custos.
+
     v.msgs("MSG_CAMINHANDO")
     while len(path) < len_path:
         neighborhood = mat[node_start]
@@ -65,11 +74,12 @@ def find_path(mat, node_start, len_path, vet_occur):
                  neighborhood.pop(next_node)
         gtfo = 1
         node_start = next_node
-        print 'Tamanho do caminho: '+str(len(path))
+        #print 'Tamanho do caminho: '+str(len(path)) # quase desnecessario agora
     v.msgs("MSG_CAMINHANDO_END")
     return sorted(path)
 
-def heuristic_1(vet_occur, neighborhood_node):
+# do jeito que estava antes
+def heuristic_1_bak(vet_occur, neighborhood_node):
     temp = [0.0]*26
     index = 0
     golden_ratio = (1 + 5 ** 0.5) / 4                           #dividi a proporcao aurea por 2 
@@ -77,100 +87,51 @@ def heuristic_1(vet_occur, neighborhood_node):
         temp[index] = float(neighbor) * float(vet_occur[index]) * float(d.get_random()) * golden_ratio
         index +=1
     return neighborhood_node.index(max(neighborhood_node))
-        
+
+# versao modafocamente mais rapida
+def heuristic_1(vet_occur, neighborhood_node):
+    global meuRandom
+    temp = [0.0]*26
+    index = 0
+    for neighbor in neighborhood_node:
+        temp[index] = float(neighbor) * float(vet_occur[index]) * meuRandom # * golden_ratio  #aurea*random jah calculado
+        index += 1
+    return neighborhood_node.index(max(neighborhood_node))
 
 
-#TODO:
-#WARNING:
-#
-# Uma alternativa a esta funcao, seria simplesmete reduzir a probabilidade do numero quando
-# o jogo siu recentemente, e aumentar a probabilidade quando o numero nao saiu recentemente.
-#
-# Algo como, se numero saiu nos ultimos 3 jogos reduzo P*3 da probabilidade (se definirmos P como 5,
-# entao reduziriamos 15 pontos) e se numero nao saiu nos ultimos 5 jogos(caso do numero 25 no dia
-# que escrevi este comentario), aumentariamos 25 pontos de probabilidade deste numero.
-#
-# PS.: agora que escrevi os comentarios acima, todas estas funcs abaixo parecem perda de tempo....... mi
-#TODO: me de sua opiniao sobre isso e se estes dados na diagonal podem ser uteis em sua func de caminhar no grafo
 
-#calc a qntos jogos que cada numero sai ou nao
+
+# calc a qntos jogos que cada numero sai ou nao
+# Aumenta ou diminui a "probabilidade" do numero na matriz de pares, baseado em observacoes 
 def calcSeqLast(mat_jogos, mat_pairs): #TODO: nome temporario fei bagarai....
-    MAX = 15                                               # Defini como 15 o maximo de jogos consecutivos que calculo, com base em observacoes
+    MAX = 10.0                                             # Defini como 10 o maximo de jogos consecutivos que numero sai, com base em observacoes
+    MAX2 = 5.0                                             # 5 como maximo de jogos que numero passa sem sair.
     cont = [0]*26
+    k = 0.0
 
-    j = len(mat_jogos)-1
+    j = len(mat_jogos)-1                                   # indice do ultimo jogo.
     for i in range(1,26):                                  # calculo a quanto tempo um numero tem ou nao saido
-        k=1
+        c = 1
+        k=0.0
         if i in mat_jogos[j]:                              # se o numero saiu no ultimo jogo calculo a quantos jogos ele tem saido
-            while i in mat_jogos[j-k]:
-                k+=1                                       # k= numero de jogos que numero sai ou nao.
-            k+=1                                           # k+1 => numero de jogos que tera saido se sair novamente... nao sei se isso faz muito sentido
-            s=0
-            for jogo in mat_jogos:                         # calculo quantas vezes na historia este numero ficou este tanto de tempo saindo ou nao
-                if i in jogo:                              # Automagicamente este valor eh maior quando proximo do numero de vezes que mais saiu.
-                    s+=1
-                else:
-                    if s==k:
-                        mat_pairs[i][i] += 1               # Insiro este valor na diagonal do grafo
-                    s=0
-        
+            while i in mat_jogos[j-c]:
+                c += 1                                     # c == numero de jogos que numero sai.
+            if c > 1:
+                #if c > MAX: # como estou fazendo uma divisao pelo dobro do maior numero de sequencias jah visto,
+                    #c = MAX # limitar o numero 'c' nao tem relevancia...
+                k = 1 - c/(MAX*2)                          # mantem k entre 0,5 e 1. quanto mais tempo o numero sai, menor a chance de sair novamente.
+                for l in xrange(i+1, 26):
+                    mat_pairs[i][l] = int(mat_pairs[i][l] * k)
         else:                                              # * Se o numero NAO saiu, calculo a quantos jogos ele NAO sai.
-            while i not in mat_jogos[j-k]:                 # * Basicamente o inverso da parte acima.
-                k+=1
-            k+=1
-            s=0
-            for jogo in mat_jogos:
-                if i in jogo:
-                    if s==k:
-                        mat_pairs[i][i] += 1 #TODO inverter esta probabilidade? no momento ele diz se eh provavel que continue NAO saindo...
-                    s=0
-                else:
-                    s+=1
+            while i not in mat_jogos[j-c]:                 # * Basicamente o inverso da parte acima.
+                c += 1
+            if c > 1: # k==1 mantem tudo igual. 
+                #if c > MAX2:
+                    #c = MAX2
+                k = 1 + c/(MAX2*2)                         # mantem k entre 1 e 1,5. quanto mais tempo numero nao sai, maior a chance de sair.
+                for l in xrange(i+1, 26):
+                    mat_pairs[i][l] = int(mat_pairs[i][l] * k)
 
-    for x in mat_pairs:
-        for y in x:
-            print " {0:3d}".format(y),
-        print ""
-    print ""
+    load_graph(mat_pairs)
 #fim dessa loucura
 #\calcSeqLast
-
-#deixarei isto aqui para referencias futuras e caso a ideia acima nao de 'S'erto...
-# Calcula quantas vezes cada numero sai em jogos consecutivos.
-def calcSeq(mat_jogos):
-    MAX = 15                                               # Defini como 10 o maximo de jogos consecutivos que um numero eh sorteado....
-    seq = [[0 for x in xrange(MAX+1)]for x in xrange(26)]  # Inicializa vetor de sequencias
-
-    print "# numero de jogos consecutivos em que um numero saiu:"
-    for i in range(1,26):
-        s=0
-        for jogo in mat_jogos:
-            if i in jogo:
-                s+=1
-            else:
-                if s>=MAX:
-                    seq[i][MAX] += 1
-                else:
-                    seq[i][s] += 1
-                s=0
-    #TODO: algo com esses dados
-
-    # Reseta tudo e calcula aos contrarios
-    print "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - -\n"
-    for i in xrange(26):
-        for s in xrange(MAX+1):
-            seq[i][s] = 0
-
-    print "# numero de jogos consecutivos em que um numero *NAO* saiu"
-    for i in range(1,26):
-        s=0
-        for jogo in mat_jogos:
-            if i in jogo:
-                if s>=MAX:
-                    seq[i][MAX] += 1
-                else:
-                    seq[i][s] += 1
-                s=0
-            else:
-                s+=1
-    #TODO: algo com esses outros dados
